@@ -89,3 +89,22 @@ Reseau* reconstitueReseauListe(Chaines *C){
 
 
 
+int nbCommodites(Reseau *R){
+     CellCommodite *commodites = R->commodites;
+     int nbc=0;
+     while(commodites){
+        nbc++;
+        commodites = commodites->suiv;
+     }
+      return nbc;
+}
+
+
+int nbLiaison(Reseau* R)   {
+     CellCommodite *commodites = R->commodites;
+     int nbc=0;
+     while(commodites){
+        commodites = commodites->suiv;
+     }
+      return nbc;
+}
