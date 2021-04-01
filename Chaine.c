@@ -26,8 +26,8 @@ Chaines* lectureChaines(FILE *f){
         tempChaine->numero = numero;
         double x, y;
         //printf("LIGNE 26\n") ;
-        CellPoint *points = (CellPoint *)malloc(nbPoints * sizeof(CellPoint));
-        CellPoint *temp = points;
+        CellPoint *temp = (CellPoint *)malloc(sizeof(CellPoint));
+        CellPoint *points = temp;
 
         for (int i = 0; i < nbPoints ; i++)      {
             
@@ -39,15 +39,15 @@ Chaines* lectureChaines(FILE *f){
             temp = temp->suiv;
 
         }
-        temp = NULL ;
-          /*Mettre a jour le chainage*/
- 
+        temp->suiv = NULL ;
+        /*Mettre a jour le chainage*/
         tempChaine->points = points;
-        tempChaine->suiv = malloc(sizeof(Chaines)) ;
+        if (k==nbChaines-1) break ;
+        tempChaine->suiv = malloc(sizeof(CellChaine)) ;
         tempChaine = tempChaine->suiv ;
         //printf("LIGNE 44\n") ;
     }
-    tempChaine = NULL ;
+    tempChaine->suiv = NULL ;
     ch->chaines = cellchaine ;
 
     return ch ;

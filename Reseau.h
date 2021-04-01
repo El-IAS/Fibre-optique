@@ -24,7 +24,7 @@ typedef struct cellCommodite {
 } CellCommodite;
 
 /* Un reseau */
-typedef struct {
+typedef struct reseau{
     int nbNoeuds;                   /* Nombre de noeuds du reseau */
     int gamma;                      /* Nombre maximal de fibres par cable */
     CellNoeud *noeuds;              /* Liste des noeuds du reseau */
