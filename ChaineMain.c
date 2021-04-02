@@ -16,13 +16,13 @@ int main(int argc, char** argv) {
     //affiche_Chaines(ch) ;
 
     Reseau* R = reconstitueReseauListe(ch) ;
-    //FILE* g = fopen("testMainChaine.cha", "w") ;
-    //ecrireChaines(ch, g) ;
+    FILE* g = fopen("testMainChaine.cha", "w") ;
+    ecrireReseau(R, g) ;
     //afficheChainesSVG(ch, "Chaines") ; 
     fclose(f) ; 
-    //fclose(g) ;
+    fclose(g) ;
 
-    printf("%d\n", R->nbNoeuds) ;
+    //printf("%d\n", R->nbNoeuds) ;
    //printf("longueurTotal : %.2f\n nb_points = %d\n", longueurTotale(ch), comptePointsTotal(ch)) ;
 }
 

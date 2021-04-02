@@ -13,7 +13,6 @@ Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
           Noeud *nd = noeuds->nd;
           if (nd){
                 if (nd->x == x && nd->y == y){
-
                     return nd;
               }
         }
@@ -58,23 +57,44 @@ Reseau* reconstitueReseauListe(Chaines *C){
       if (points) extrA=rechercheCreeNoeudListe(R,points->x,points->y) ;
 
        while(points){
-
-         CellNoeud* voisins = R->noeuds ;
-
+         CellPoint *init_points = chaines->points;
          extrB=rechercheCreeNoeudListe(R,points->x,points->y);
 
-         points = points->suiv;
          // Mettre a jour la liste des voisins
-         extrB->voisins = voisins ;
-         CellNoeud *precedents = voisins ; 
-         while(precedents){
-           CellNoeud* voisins_prec = precedents->suiv ;
-           while (voisins_prec) { voisins_prec= voisins_prec->suiv ; }
-           voisins_prec = (CellNoeud*)malloc(sizeof(CellNoeud)) ;
-           voisins_prec->nd = extrB ;
-           voisins_prec->suiv = NULL ;
-           precedents = precedents->suiv ;
+        CellNoeud* voisins = NULL ;
+        Noeud* fils = NULL ;
+         if (points->suiv)  {
+           fils = rechercheCreeNoeudListe(R,points->suiv->x,points->suiv->y);
+           voisins = malloc(sizeof(CellNoeud)) ;
+           voisins->nd = fils ;
+           voisins->suiv = NULL ;        
          }
+
+        Noeud* pere = NULL ;         
+         
+         if (points != init_points) {
+            while (init_points->suiv != points)  {
+              init_points = init_points->suiv ;
+            }
+
+            if (init_points) {
+              pere = rechercheCreeNoeudListe(R,init_points->x,init_points->y);
+              if (voisins)  {
+                voisins->suiv = malloc(sizeof(CellNoeud)) ;
+                voisins->suiv->nd = pere ;
+                voisins->suiv->suiv = NULL ;
+              }
+              else {
+                voisins = malloc(sizeof(CellNoeud)) ;
+                voisins->nd = pere ;
+                voisins->suiv = NULL ;    
+              }
+            }
+         }
+
+        extrB->voisins = voisins ;
+        points = points->suiv;
+        
        }
      
        // Ajouter les commodités
@@ -152,12 +172,51 @@ int nbLiaison(Reseau* R)   {
        Noeud* nd = noeuds->nd ;
        CellNoeud* voisins = nd->voisins ;
        while (voisins)  {
+         if (nd->num > voisins->nd->num)
          res++ ;
          voisins = voisins->suiv ;
        }
        noeuds=noeuds->suiv ;
     }
-    return (int) res/2 ;
+    return res ;
 }
 
 
+
+
+
+void ecrireReseau(Reseau *R, FILE *f){
+    
+  fprintf(f,"NbNoeuds : %d\nNbLiaisons: %d\nNbCommodites : %d\nGamma : %d\n\n",R->nbNoeuds,nbLiaison(R),nbCommodites(R),R->gamma) ;
+    
+    /*Afficher les noeuds*/
+   CellNoeud *noeuds1 = R->noeuds;
+   while(noeuds1){
+        Noeud *nd = noeuds1->nd;
+        fprintf(f,"v %d %lf %lf\n",nd->num,nd->x,nd->y);
+        noeuds1 = noeuds1->suiv; 
+   } 
+  fprintf(f, "\n") ;
+  /*Afficher les liaisons*/
+
+
+  CellNoeud* noeuds2 = R->noeuds ;
+    while (noeuds2) {
+       Noeud* nd = noeuds2->nd ;
+       CellNoeud* voisins = nd->voisins ;
+       while (voisins)  {
+         if (nd->num > voisins->nd->num)  {
+           fprintf(f, "l %d %d\n", nd->num, voisins->nd->num) ;
+         }
+         voisins=voisins->suiv ;
+       }
+       noeuds2=noeuds2->suiv ;
+    }
+    fprintf(f, "\n") ;
+   /*Afficher les commodites*/
+   CellCommodite *commodites = R->commodites;
+   while(commodites){
+        fprintf(f,"k %d %d\n",commodites->extrA->num,commodites->extrB->num);
+        commodites = commodites->suiv;
+   }
+}
