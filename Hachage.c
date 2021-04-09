@@ -23,14 +23,21 @@ Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y)
        }
        listeNoeuds = listeNoeuds->suiv ;
    }
-   Noeud* NoeudAjout=rechercheCreeNoeudListe(R,  x,  y) ;
+
+
+Noeud *new_noeud = (Noeud*)malloc(sizeof(Noeud));
+    new_noeud->x = x ;
+    new_noeud->y = y ;
+    new_noeud->num = R->nbNoeuds + 1 ;
+    new_noeud->voisins = NULL ;
+    R->nbNoeuds++ ;
    H->nbNoeuds += 1;
    CellNoeud *CellNoeudAjout = (CellNoeud*)malloc(sizeof(CellNoeud));
-   CellNoeudAjout->nd = NoeudAjout;
+   CellNoeudAjout->nd = new_noeud ;
    CellNoeudAjout->suiv = H->TabDeNeouds[emp] ;
    H->TabDeNeouds[emp] = CellNoeudAjout ; 
 
-   return NoeudAjout;
+   return new_noeud ;
 }
 
 
@@ -49,7 +56,8 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
     H->TabDeNeouds = TabDeNoeud;
     CellChaine *chaines = C->chaines;
 
-    // ?
+    
+    // Voisin ?
 
 
     //

@@ -19,8 +19,6 @@ Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
       noeuds=noeuds->suiv;
     }
 
-
-
     Noeud *new_noeud = (Noeud*)malloc(sizeof(Noeud));
     new_noeud->x = x ;
     new_noeud->y = y ;
@@ -36,6 +34,20 @@ Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y){
 
     return new_noeud ;
 }
+
+
+void mettreAJourVoisins(Reseau* R,CellNoeud* voisins, double x, double y) {
+    if (voisins==NULL) {
+      voisins = (CellNoeud*) malloc(sizeof(voisins)) ;
+    }
+    Noeud* n = (Noeud*)malloc(sizeof(Noeud)) ;
+    n = rechercheCreeNoeudListe(R, x, y) ;
+    if (n==NULL)  fprintf(stderr, "Error !\n") ;
+    voisins->nd=n ;
+    voisins->suiv=NULL ;
+    voisins= voisins->suiv ;
+}
+
 
 
 Reseau* reconstitueReseauListe(Chaines *C){
@@ -63,18 +75,11 @@ Reseau* reconstitueReseauListe(Chaines *C){
          // Mettre a jour la liste des voisins
         CellNoeud* voisins = (CellNoeud*) malloc(sizeof(CellNoeud)) ;
         CellNoeud* temp_voisins = voisins ;
-        Noeud* fils = NULL ;
+
          if (points->suiv)  {
-           fils  = rechercheCreeNoeudListe(R,points->suiv->x,points->suiv->y);
-           voisins->nd = malloc(sizeof(Noeud)) ;
-           voisins->nd = NULL ; 
-           voisins->nd = fils ; 
-           printf("%d\n", voisins->nd->num) ;
-           voisins->suiv = NULL ;
-           printf("%d\n", fils->num) ;
-                
+            mettreAJourVoisins(R, voisins, points->suiv->x, points->suiv->y) ;
          }
-        Noeud* pere = NULL ;         
+        
          
          if (points != init_points) {
             while (init_points->suiv != points)  {
@@ -82,24 +87,13 @@ Reseau* reconstitueReseauListe(Chaines *C){
             }
 
             if (init_points) {
-              voisins->suiv = malloc(sizeof(CellNoeud)) ;
-              voisins = voisins->suiv ;
-              voisins->nd = malloc(sizeof(Noeud)) ;
-              voisins->nd=NULL ;
-              pere = rechercheCreeNoeudListe(R,init_points->x,init_points->y);
-              voisins->nd = pere ;
-              voisins->suiv = NULL ;                
+              mettreAJourVoisins(R, voisins, init_points->x, init_points->y) ;
             }
 
          }
 
 
-        CellNoeud* test = temp_voisins ;
-        while (test && test->nd)  {
-            printf("%d\n", test->nd->num) ;
-            printf("HHH\n") ;
-            test= test->suiv ;
-        }
+
 
         extrB->voisins = temp_voisins ;
         points = points->suiv;
