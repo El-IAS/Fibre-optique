@@ -1,7 +1,7 @@
  #include "Reseau.h"
  
  typedef struct hachage{
-    int tailleMax;
+    int tailleMax; // taille de la table
     int nbNoeuds;
     CellNoeud **TabDeNeouds;
 }TableHachage ;
