@@ -95,3 +95,55 @@ if ((*a != NULL) && ((*a)->noeud == NULL)) {
 
 }
 
+
+
+Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat*parent, double x, double y){
+    
+    if (*a == NULL){
+     Noeud *new_noeud = (Noeud*)malloc(sizeof(Noeud));
+     new_noeud->x = x ;
+     new_noeud->y = y ;
+     new_noeud->num = R->nbNoeuds + 1 ;
+     new_noeud->voisins = NULL ;
+
+     insererNoeudArbre(new_noeud, a, parent) ;
+
+    }
+    
+    if ((*a)->noeud!=NULL){
+     /*creer les trucs et tester*/
+     Noeud* n = (*a)->noeud ;
+     if (n->x==x && n->y==y)  {
+          return n ;
+     }
+     Noeud *new_noeud = (Noeud*)malloc(sizeof(Noeud));
+     new_noeud->x = x ;
+     new_noeud->y = y ;
+     new_noeud->num = R->nbNoeuds + 1 ;
+     new_noeud->voisins = NULL ;
+     // ?? 
+     insererNoeudArbre(new_noeud, a , parent) ;
+
+    }
+    
+    if ((*a != NULL) && ((*a)->noeud == NULL)){
+        if(x < (*a)->xc && y < (*a)->yc){
+           rechercheCreeNoeudArbre(R,(*a)->so,a,x,y);
+        }
+        if(x >= (*a)->xc && y < (*a)->yc){
+           rechercheCreeNoeudArbre(R,(*a)->se,a,x,y);
+        }
+        if(x < (*a)->xc && y >= (*a)->yc){
+           rechercheCreeNoeudArbre(R,(*a)->no,a,x,y);
+        }
+        if(x >= (*a)->xc && y >= (*a)->yc){
+           
+      rechercheCreeNoeudArbre(R,(*a)->ne,a,x,y);  
+      }
+
+    }
+}
+
+
+
+

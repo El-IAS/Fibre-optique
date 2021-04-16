@@ -25,19 +25,37 @@ Noeud* rechercheCreeNoeudHachage(Reseau* R, TableHachage* H, double x, double y)
    }
 
 
-Noeud *new_noeud = (Noeud*)malloc(sizeof(Noeud));
-    new_noeud->x = x ;
-    new_noeud->y = y ;
-    new_noeud->num = R->nbNoeuds + 1 ;
-    new_noeud->voisins = NULL ;
+    Noeud *new_noeud1 = (Noeud*)malloc(sizeof(Noeud));
+    new_noeud1->x = x ;
+    new_noeud1->y = y ;
+    new_noeud1->num = R->nbNoeuds + 1 ;
+    new_noeud1->voisins = NULL ;
     R->nbNoeuds++ ;
-   H->nbNoeuds += 1;
+    H->nbNoeuds += 1;
+
    CellNoeud *CellNoeudAjout = (CellNoeud*)malloc(sizeof(CellNoeud));
-   CellNoeudAjout->nd = new_noeud ;
+   
+   CellNoeudAjout->nd = new_noeud1 ;
    CellNoeudAjout->suiv = H->TabDeNeouds[emp] ;
    H->TabDeNeouds[emp] = CellNoeudAjout ; 
 
-   return new_noeud ;
+    // Insertion dans l'arbre 
+
+    Noeud *new_noeud2 = (Noeud*)malloc(sizeof(Noeud));
+    new_noeud2->x = x ;
+    new_noeud2->y = y ;
+    new_noeud2->num = R->nbNoeuds + 1 ;
+    new_noeud2->voisins = NULL ;
+    //
+    CellNoeud* new_cell = malloc((sizeof(CellNoeud))) ;
+    new_cell->nd = new_noeud2 ;
+    new_cell->suiv = R->noeuds ;
+    R->noeuds = new_cell ; 
+
+    R->nbNoeuds++ ;
+
+
+   return new_noeud2 ;
 }
 
 
@@ -95,8 +113,6 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
          }
 
 
-
-
         extrB->voisins = temp_voisins ;
         points = points->suiv;
         
@@ -114,22 +130,7 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
 
    R->commodites = commodites ;
    
-   /* parcours des cases de la table hachage et on
-    contruit R->noeuds */
-   CellNoeud* noeud = NULL ; /* = R->noeuds */
 
-   for (int i=0; i<H->tailleMax; i++){
-       CellNoeud* n = H->TabDeNeouds[i] ;
-       if (n != NULL)   {
-           while (n->suiv)  {
-               n=n->suiv ;
-           }
-           n->suiv=noeud ;
-           noeud = n ;
-       }
-   }
-
-    R->noeuds = noeud ;
    return R ;
 
 }
